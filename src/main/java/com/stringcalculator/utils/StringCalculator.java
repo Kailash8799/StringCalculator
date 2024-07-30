@@ -4,8 +4,11 @@ import com.stringcalculator.utils.interfaces.IStringCalculator;
 
 public class StringCalculator implements IStringCalculator {
 
+  private int callCount = 0;
+
   @Override
   public int add(String numbers) {
+    callCount++;
     if (numbers.isEmpty()) {
       return 0;
     }
@@ -43,5 +46,10 @@ public class StringCalculator implements IStringCalculator {
       );
     }
     return sum;
+  }
+
+  @Override
+  public int getCalledCount() {
+    return this.callCount;
   }
 }

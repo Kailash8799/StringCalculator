@@ -47,5 +47,9 @@ public class Application {
     } catch (Exception e) {
       System.err.println(e.toString());
     }
+
+    // test case : 9 -> get called count
+    int count = calculator.getCalledCount();
+    System.out.println("Called count : " + count);
   }
 }

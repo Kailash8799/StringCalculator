@@ -48,4 +48,12 @@ public class StringCalculatorTest {
   public void testNegativeNumbersThrowException() {
     calculator.add("1,-2,3");
   }
+
+  @Test
+  public void testGetCalledCount() {
+    calculator.add("1,2");
+    assertEquals(1, calculator.getCalledCount());
+    calculator.add("3,4");
+    assertEquals(2, calculator.getCalledCount());
+  }
 }
