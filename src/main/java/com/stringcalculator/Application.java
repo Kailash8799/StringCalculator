@@ -55,5 +55,9 @@ public class Application {
     // test case : 10 -> ignore numbers greater than 1000
     sum = calculator.add("1,2,1001");
     System.out.println("Sum of 2 number is : " + sum);
+
+    // test case : 11 -> string with multiple length delimiter
+    sum = calculator.add("//[***]\n1***2***3");
+    System.out.println("Sum of 3 number is : " + sum);
   }
 }

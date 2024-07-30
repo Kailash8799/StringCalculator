@@ -19,7 +19,12 @@ public class StringCalculator implements IStringCalculator {
     String delimiter = "[,\n]"; // this is default delimiter
     if (numbers.startsWith("//")) {
       String[] parts = numbers.split("\n", 2);
-      delimiter = parts[0].substring(2);
+      String delimiterPart = parts[0].substring(2);
+      delimiter =
+        delimiterPart
+          .replaceAll("\\[", "")
+          .replaceAll("\\]", "")
+          .replaceAll("\\*", "\\\\*");
       numbers = parts[1];
     }
 

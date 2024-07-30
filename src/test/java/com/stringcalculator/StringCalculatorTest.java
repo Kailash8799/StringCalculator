@@ -83,4 +83,9 @@ public class StringCalculatorTest {
   public void testIgnoreNumbersGreaterThan1000() {
     assertEquals(2, calculator.add("2,1001"));
   }
+
+  @Test
+  public void testDelimitersOfAnyLength() {
+    assertEquals(6, calculator.add("//[***]\n1***2***3"));
+  }
 }
