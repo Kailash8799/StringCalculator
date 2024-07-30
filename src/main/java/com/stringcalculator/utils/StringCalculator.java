@@ -1,10 +1,13 @@
 package com.stringcalculator.utils;
 
+import com.stringcalculator.utils.interfaces.IAddOccurredListener;
 import com.stringcalculator.utils.interfaces.IStringCalculator;
+import java.util.*;
 
 public class StringCalculator implements IStringCalculator {
 
   private int callCount = 0;
+  private final List<IAddOccurredListener> listeners = new ArrayList<>();
 
   @Override
   public int add(String numbers) {
@@ -45,11 +48,25 @@ public class StringCalculator implements IStringCalculator {
         "Negatives not allowed: " + negatives.toString()
       );
     }
+
+    notifyListeners(numbers, sum);
+
     return sum;
   }
 
   @Override
   public int getCalledCount() {
     return this.callCount;
+  }
+
+  @Override
+  public void addAddOccurredListener(IAddOccurredListener listener) {
+    listeners.add(listener);
+  }
+
+  private void notifyListeners(String input, int result) {
+    for (IAddOccurredListener listener : listeners) {
+      listener.onAddOccurred(input, result);
+    }
   }
 }

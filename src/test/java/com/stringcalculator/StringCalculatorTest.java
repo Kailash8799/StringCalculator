@@ -3,6 +3,7 @@ package com.stringcalculator;
 import static org.junit.Assert.assertEquals;
 
 import com.stringcalculator.utils.StringCalculator;
+import com.stringcalculator.utils.interfaces.IAddOccurredListener;
 import com.stringcalculator.utils.interfaces.IStringCalculator;
 import org.junit.Test;
 
@@ -55,5 +56,26 @@ public class StringCalculatorTest {
     assertEquals(1, calculator.getCalledCount());
     calculator.add("3,4");
     assertEquals(2, calculator.getCalledCount());
+  }
+
+  @Test
+  public void testAddOccursEventTriggered() {
+    final String[] givenInput = { null };
+    final int[] resultHolder = { 0 };
+
+    calculator.addAddOccurredListener(
+      new IAddOccurredListener() {
+        @Override
+        public void onAddOccurred(String input, int result) {
+          givenInput[0] = input;
+          resultHolder[0] = result;
+        }
+      }
+    );
+
+    calculator.add("1,2,3");
+
+    assertEquals("1,2,3", givenInput[0]);
+    assertEquals(6, resultHolder[0]);
   }
 }
