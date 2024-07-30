@@ -19,7 +19,7 @@ String Calculator is a simple Java application that implements a calculator that
 
 ### Prerequisites
 
-- Java Development Kit (JDK) 8 or higher
+- Java Development Kit (JDK) 17 or higher
 - Maven (for dependency management)
 
 ### Installation
@@ -28,3 +28,9 @@ String Calculator is a simple Java application that implements a calculator that
    ```bash
    git clone https://github.com/Kailash8799/StringCalculator.git
    cd StringCalculator
+2. To run the application, use the following command:
+   ```bash
+   mvn clean compile exec:java
+3. To run the test cases, use the following command:
+   ```bash
+   mvn test
