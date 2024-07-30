@@ -23,5 +23,13 @@ public class Application {
     // test case : 4 -> string with comma seperated multiple numbers
     sum = calculator.add("1,2,3,4,5,6");
     System.out.println("Sum of 6 number is : " + sum);
+
+    // test case : 5 -> string with newline and comma seperated numbers
+    sum = calculator.add("1\n2,3,4,5\n6");
+    System.out.println("Sum of 6 number is with newline : " + sum);
+
+    // test case : 6 -> invalid string with newline and comma seperated numbers
+    sum = calculator.add("1,\n");
+    System.out.println("Sum of 6 number is with newline : " + sum);
   }
 }
