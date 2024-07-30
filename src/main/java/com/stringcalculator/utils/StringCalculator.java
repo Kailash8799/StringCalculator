@@ -4,27 +4,66 @@ import com.stringcalculator.utils.interfaces.IAddOccurredListener;
 import com.stringcalculator.utils.interfaces.IStringCalculator;
 import java.util.*;
 
+/**
+ * This class represents a simple String Calculator that can perform
+ * addition on a string of numbers with custom delimiters.
+ */
+
 public class StringCalculator implements IStringCalculator {
 
+  /**
+   * The number of times the add method has been called.
+   */
   private int callCount = 0;
+
+  /**
+   * List of listeners for the add occurred event.
+   */
   private final List<IAddOccurredListener> listeners = new ArrayList<>();
 
+  /**
+   * Adds the numbers in the given string.
+   *
+   * @param numbers A string containing numbers to be added. It can contain
+   *                custom delimiters specified in the format "//[delimiter]\n" or * or \n.
+   *                If the string is empty, it returns 0.
+   * @return The sum of the numbers in the integer.
+   * @throws IllegalArgumentException If any negative numbers are found in the input.
+   */
   @Override
   public int add(String numbers) {
     callCount++;
     if (numbers.isEmpty()) {
+      notifyListeners(numbers, 0);
       return 0;
     }
 
     String delimiter = "[,\n]"; // this is default delimiter
     if (numbers.startsWith("//")) {
+      // split by newline to get delimiter and numbers
       String[] parts = numbers.split("\n", 2);
       String delimiterPart = parts[0].substring(2);
-      delimiter =
-        delimiterPart
-          .replaceAll("\\[", "")
-          .replaceAll("\\]", "")
-          .replaceAll("\\*", "\\\\*");
+
+      // remove square brackets if present in multi-character delimiter
+      if (delimiterPart.startsWith("[") && delimiterPart.endsWith("]")) {
+        delimiterPart = delimiterPart.substring(1, delimiterPart.length() - 1);
+      }
+
+      // split by square brackets to get multiple delimiters
+      String[] delimiters = delimiterPart.split("\\]\\[", -1);
+
+      StringBuffer regexBuilder = new StringBuffer();
+      for (String d : delimiters) {
+        regexBuilder.append("\\Q").append(d).append("\\E|");
+      }
+
+      // remove last pipe character from regex
+      if (regexBuilder.length() > 0) {
+        regexBuilder.setLength(regexBuilder.length() - 1);
+      }
+
+      // set delimiter and numbers
+      delimiter = regexBuilder.toString();
       numbers = parts[1];
     }
 
@@ -48,12 +87,14 @@ public class StringCalculator implements IStringCalculator {
       }
     }
 
+    // throw exception if negatives are present
     if (negatives.length() > 0) {
       throw new IllegalArgumentException(
         "Negatives not allowed: " + negatives.toString()
       );
     }
 
+    // notify listeners with input and result
     notifyListeners(numbers, sum);
 
     return sum;

@@ -59,5 +59,13 @@ public class Application {
     // test case : 11 -> string with multiple length delimiter
     sum = calculator.add("//[***]\n1***2***3");
     System.out.println("Sum of 3 number is : " + sum);
+
+    // test case : 12 -> string with multiple delimiters
+    sum = calculator.add("//[*][%]\n1*2%3");
+    System.out.println("Sum of 3 number is : " + sum);
+
+    // test case : 13 -> string with multiple length multiple delimiters
+    sum = calculator.add("//[**][%%]\n1**2%%3");
+    System.out.println("Sum of 3 number is : " + sum);
   }
 }
