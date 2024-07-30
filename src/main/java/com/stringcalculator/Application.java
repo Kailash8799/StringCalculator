@@ -39,5 +39,13 @@ public class Application {
     // test case : 7 -> string with different delimiter
     sum = calculator.add("//;\n1;2");
     System.out.println("Sum With different delimiter : " + sum);
+
+    // test case : 8 -> string with negative numbers
+    try {
+      sum = calculator.add("1,-2,3,-4");
+      System.out.println("Sum of 3 number is : " + sum);
+    } catch (Exception e) {
+      System.err.println(e.toString());
+    }
   }
 }

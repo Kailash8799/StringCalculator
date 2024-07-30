@@ -43,4 +43,9 @@ public class StringCalculatorTest {
   public void testDifferentDelimiters() {
     assertEquals(6, calculator.add("//;\n1;2;3"));
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNegativeNumbersThrowException() {
+    calculator.add("1,-2,3");
+  }
 }
