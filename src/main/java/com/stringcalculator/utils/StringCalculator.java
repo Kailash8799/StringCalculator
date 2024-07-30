@@ -38,7 +38,7 @@ public class StringCalculator implements IStringCalculator {
           negatives.append(", ");
         }
         negatives.append(number);
-      } else {
+      } else if (number <= 1000) {
         sum += number;
       }
     }

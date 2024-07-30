@@ -51,5 +51,9 @@ public class Application {
     // test case : 9 -> get called count
     int count = calculator.getCalledCount();
     System.out.println("Called count : " + count);
+
+    // test case : 10 -> ignore numbers greater than 1000
+    sum = calculator.add("1,2,1001");
+    System.out.println("Sum of 2 number is : " + sum);
   }
 }
