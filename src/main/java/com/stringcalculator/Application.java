@@ -28,8 +28,16 @@ public class Application {
     sum = calculator.add("1\n2,3,4,5\n6");
     System.out.println("Sum of 6 number is with newline : " + sum);
 
-    // test case : 6 -> invalid string with newline and comma seperated numbers
-    sum = calculator.add("1,\n");
-    System.out.println("Sum of 6 number is with newline : " + sum);
+    // // test case : 6 -> invalid string with newline and comma seperated numbers
+    try {
+      sum = calculator.add("1,\n");
+      System.out.println("Sum of 6 number is with newline : " + sum);
+    } catch (Exception e) {
+      System.err.println(e.toString());
+    }
+
+    // test case : 7 -> string with different delimiter
+    sum = calculator.add("//;\n1;2");
+    System.out.println("Sum With different delimiter : " + sum);
   }
 }

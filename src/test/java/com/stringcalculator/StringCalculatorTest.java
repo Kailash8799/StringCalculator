@@ -11,34 +11,36 @@ import org.junit.Test;
  */
 public class StringCalculatorTest {
 
+  IStringCalculator calculator = new StringCalculator();
+
   @Test
   public void testEmptyStringReturnsZero() {
-    IStringCalculator calculator = new StringCalculator();
     assertEquals(0, calculator.add(""));
   }
 
   @Test
   public void testSingleNumberReturnsItself() {
-    IStringCalculator calculator = new StringCalculator();
     assertEquals(1, calculator.add("1"));
     assertEquals(2, calculator.add("2"));
   }
 
   @Test
   public void testTwoNumbersReturnsSum() {
-    IStringCalculator calculator = new StringCalculator();
     assertEquals(3, calculator.add("1,2"));
   }
 
   @Test
   public void testMultipleNumbersReturnsSum() {
-    IStringCalculator calculator = new StringCalculator();
     assertEquals(21, calculator.add("1,2,3,4,5,6"));
   }
 
   @Test
   public void testNewLinesBetweenNumbers() {
-    IStringCalculator calculator = new StringCalculator();
     assertEquals(21, calculator.add("1\n2,3,4,5\n6"));
+  }
+
+  @Test
+  public void testDifferentDelimiters() {
+    assertEquals(6, calculator.add("//;\n1;2;3"));
   }
 }

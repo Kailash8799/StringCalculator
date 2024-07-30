@@ -9,7 +9,15 @@ public class StringCalculator implements IStringCalculator {
     if (numbers.isEmpty()) {
       return 0;
     }
-    String[] nums = numbers.split("[,\n]", -1);
+
+    String delimiter = "[,\n]"; // this is default delimiter
+    if (numbers.startsWith("//")) {
+      String[] parts = numbers.split("\n", 2);
+      delimiter = parts[0].substring(2);
+      numbers = parts[1];
+    }
+
+    String[] nums = numbers.split(delimiter, -1);
     int sum = 0;
     for (String value : nums) {
       if (value.trim().isEmpty()) {
