@@ -22,6 +22,12 @@ public class StringCalculator implements IStringCalculator {
   private final List<IAddOccurredListener> listeners = new ArrayList<>();
 
   /**
+   * Default delimiter when custom delimeter not provided.
+   */
+  private static final String DEFAULT_DELIMITER = "[,\n]";
+  private static final int MAX_NUMBER = 1000;
+
+  /**
    * Adds the numbers in the given string.
    *
    * @param numbers A string containing numbers to be added. It can contain
@@ -30,6 +36,7 @@ public class StringCalculator implements IStringCalculator {
    * @return The sum of the numbers in the integer.
    * @throws IllegalArgumentException If any negative numbers are found in the input.
    */
+
   @Override
   public int add(String numbers) {
     callCount++;
@@ -38,76 +45,93 @@ public class StringCalculator implements IStringCalculator {
       return 0;
     }
 
-    String delimiter = "[,\n]"; // this is default delimiter
+    String delimiter = parseDelimiter(numbers);
+    numbers = extractNumbers(numbers);
+
+    String[] numArray = numbers.split(delimiter, -1);
+    int sum = calculateSum(numArray);
+    notifyListeners(numbers, sum);
+    return sum;
+  }
+
+  @Override
+  public int getCalledCount() {
+    return callCount;
+  }
+
+  @Override
+  public void addAddOccurredListener(IAddOccurredListener listener) {
+    listeners.add(listener);
+  }
+
+  private String parseDelimiter(String numbers) {
     if (numbers.startsWith("//")) {
-      // split by newline to get delimiter and numbers
       String[] parts = numbers.split("\n", 2);
       String delimiterPart = parts[0].substring(2);
+      return buildDelimiterRegex(delimiterPart);
+    }
+    return DEFAULT_DELIMITER;
+  }
 
-      // remove square brackets if present in multi-character delimiter
-      if (delimiterPart.startsWith("[") && delimiterPart.endsWith("]")) {
-        delimiterPart = delimiterPart.substring(1, delimiterPart.length() - 1);
-      }
+  private String buildDelimiterRegex(String delimiterPart) {
+    StringBuilder regexBuilder = new StringBuilder();
+    delimiterPart = removeBrackets(delimiterPart);
 
-      // split by square brackets to get multiple delimiters
-      String[] delimiters = delimiterPart.split("\\]\\[", -1);
-
-      StringBuffer regexBuilder = new StringBuffer();
-      for (String d : delimiters) {
-        regexBuilder.append("\\Q").append(d).append("\\E|");
-      }
-
-      // remove last pipe character from regex
-      if (regexBuilder.length() > 0) {
-        regexBuilder.setLength(regexBuilder.length() - 1);
-      }
-
-      // set delimiter and numbers
-      delimiter = regexBuilder.toString();
-      numbers = parts[1];
+    String[] delimiters = delimiterPart.split("\\]\\[");
+    for (String d : delimiters) {
+      regexBuilder.append("\\Q").append(d).append("\\E|");
     }
 
-    String[] nums = numbers.split(delimiter, -1);
+    // Remove last pipe character from regex
+    if (regexBuilder.length() > 0) {
+      regexBuilder.setLength(regexBuilder.length() - 1);
+    }
+    return regexBuilder.toString();
+  }
+
+  private String removeBrackets(String delimiterPart) {
+    if (delimiterPart.startsWith("[") && delimiterPart.endsWith("]")) {
+      return delimiterPart.substring(1, delimiterPart.length() - 1);
+    }
+    return delimiterPart;
+  }
+
+  private String extractNumbers(String numbers) {
+    if (numbers.startsWith("//")) {
+      return numbers.split("\n", 2)[1];
+    }
+    return numbers;
+  }
+
+  private int calculateSum(String[] numArray) {
     StringBuilder negatives = new StringBuilder();
     int sum = 0;
-    for (String value : nums) {
-      if (value.trim().isEmpty()) {
-        throw new IllegalArgumentException(
-          "Invalid input: empty values are not allowed"
-        );
-      }
+
+    for (String value : numArray) {
+      validateNumber(value);
       int number = Integer.parseInt(value);
       if (number < 0) {
         if (negatives.length() > 0) {
           negatives.append(", ");
         }
         negatives.append(number);
-      } else if (number <= 1000) {
+      } else if (number <= MAX_NUMBER) {
         sum += number;
       }
     }
 
-    // throw exception if negatives are present
     if (negatives.length() > 0) {
-      throw new IllegalArgumentException(
-        "Negatives not allowed: " + negatives.toString()
-      );
+      throw new IllegalArgumentException("Negatives not allowed: " + negatives);
     }
-
-    // notify listeners with input and result
-    notifyListeners(numbers, sum);
-
     return sum;
   }
 
-  @Override
-  public int getCalledCount() {
-    return this.callCount;
-  }
-
-  @Override
-  public void addAddOccurredListener(IAddOccurredListener listener) {
-    listeners.add(listener);
+  private void validateNumber(String value) {
+    if (value.trim().isEmpty()) {
+      throw new IllegalArgumentException(
+        "Invalid input: empty values are not allowed"
+      );
+    }
   }
 
   private void notifyListeners(String input, int result) {

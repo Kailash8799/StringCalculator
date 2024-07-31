@@ -73,9 +73,9 @@ public class StringCalculatorTest {
       }
     );
 
-    calculator.add("1,2,3");
+    calculator.add("//[***]\n1***2***3");
 
-    assertEquals("1,2,3", givenInput[0]);
+    assertEquals("1***2***3", givenInput[0]);
     assertEquals(6, resultHolder[0]);
   }
 
